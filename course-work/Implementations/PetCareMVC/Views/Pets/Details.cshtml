@@ -1,0 +1,103 @@
+﻿@model PetCareMVC.Models.Pet
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    @if (!string.IsNullOrEmpty(Model.PhotoPath))
+    {
+        <img src="~@Model.PhotoPath" alt="Снимка" class="img-thumbnail" style="max-width: 500px;" />
+    }
+    else
+    {
+        <p>No photo available.</p>
+    }
+</div>
+
+<div>
+    <h4>Pet</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Species)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Species)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Breed)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Breed)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DateOfBirth)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateOfBirth)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.WeightKg)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.WeightKg)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Owner.FullName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Owner.FullName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<h4>Health Records</h4>
+<a asp-controller="HealthRecords" asp-action="Create" asp-route-petId="@Model.Id" class="btn btn-primary mb-2">Add Health Record</a>
+@if (Model.HealthRecords != null && Model.HealthRecords.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Temperature</th>
+                <th>Vaccinated</th>
+                <th>Microchip</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model.HealthRecords)
+            {
+                <tr>
+                    <td>@record.VisitDate.ToShortDateString()</td>
+                    <td>@record.Description</td>
+                    <td>@record.Temperature</td>
+                    <td>@record.IsVaccinated</td>
+                    <td>@record.MicrochipNumber</td>
+                    <td>
+                        <a asp-controller="HealthRecords" asp-action="Details" asp-route-id="@record.Id">View</a> |
+                        <a asp-controller="HealthRecords" asp-action="Edit" asp-route-id="@record.Id">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No health records available.</p>
+}

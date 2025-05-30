@@ -1,0 +1,105 @@
+﻿@using PetCareMVC.Helper
+@model PaginatedList<PetCareMVC.Models.Pet>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-action="Index" method="get" class="form-inline mb-3">
+    <input type="text" name="searchName" value="@ViewData["CurrentFilterName"]"
+           class="form-control mr-2" placeholder="Име" />
+    <button type="submit" class="btn btn-primary">Търси</button>
+</form>
+
+<form asp-action="Index" method="get" class="form-inline mb-3">
+    <input type="text" name="searchName" value="@ViewData["CurrentFilterName"]"
+           class="form-control mr-2" placeholder="Име" />
+    <input type="text" name="searchSpecies" value="@ViewData["CurrentFilterSpecies"]"
+           class="form-control mr-2" placeholder="Вид" />
+    <button type="submit" class="btn btn-primary">Търси</button>
+</form>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.ActionLink("Име", "Index", new { sortOrder = ViewData["NameSortParm"], searchName = ViewData["CurrentFilterName"], searchSpecies = ViewData["CurrentFilterSpecies"] })
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Species)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Breed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().WeightKg)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Owner)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Species)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Breed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOfBirth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WeightKg)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Owner.Address)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<nav>
+  <ul class="pagination">
+    @if (Model.HasPreviousPage)
+    {
+        <li class="page-item">
+            <a class="page-link" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchName="@ViewData["CurrentFilterName"]">Previous</a>
+        </li>
+    }
+    @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+            <a class="page-link" asp-route-pageNumber="@i" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchName="@ViewData["CurrentFilterName"]">@i</a>
+        </li>
+    }
+    @if (Model.HasNextPage)
+    {
+        <li class="page-item">
+            <a class="page-link" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchName="@ViewData["CurrentFilterName"]">Next</a>
+        </li>
+    }
+  </ul>
+</nav>
